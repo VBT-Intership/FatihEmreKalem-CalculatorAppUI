@@ -1,48 +1,39 @@
 import 'package:calculatorUI/ui/widget/style/color.dart';
 import 'package:flutter/material.dart';
+import 'calcMath.dart';
 
 // ignore: must_be_immutable
-class CalcButton extends StatefulWidget {
+class CalcButton extends StatelessWidget {
   final String number;
-  final bool iSnumber;
 
-  CalcButton(this.number, [this.iSnumber = true]);
+  CalcButton(this.number);
 
-  @override
-  _CalcButtonState createState() => _CalcButtonState();
-}
-
-class _CalcButtonState extends State<CalcButton> {
+  String _numberStep;
+  Function onClickAction;
+  CalcMath calc = CalcMath();
   @override
   Widget build(BuildContext context) {
-    return widget.number != "="
-        ? Expanded(child: buttonBox)
-        : Expanded(flex: 2, child: buttonBox);
+    return buttonBox;
   }
 
-  Widget get buttonBox => InkWell(
-        onTap: () {
-          print(widget.number);
-        },
-        child: Container(
-          decoration: BoxDecoration(
-              border: Border.all(color: Colors.white24, width: 0.1),
-              color: colorBg()),
-          child: Center(child: widget.number == "Del" ? backspace : numberText),
-        ),
+  Widget get buttonBox => Container(
+        decoration: BoxDecoration(
+            border: Border.all(color: Colors.white24, width: 0.1),
+            color: colorBg()),
+        child: Center(child: number == "Del" ? backspace : numberText),
       );
 
   Widget get backspace => Icon(Icons.backspace, color: blue);
 
   Widget get numberText => Text(
-        widget.number,
+        number,
         style: colorText(),
       );
 
   Color colorBg() {
-    if (widget.number == "=") {
+    if (number == "=") {
       return blue;
-    } else if (!validationNumber(widget.number)) {
+    } else if (!validationNumber(number)) {
       return black50;
     } else {
       return black;
@@ -50,11 +41,11 @@ class _CalcButtonState extends State<CalcButton> {
   }
 
   TextStyle colorText() {
-    if (widget.number == "=") {
+    if (number == "=") {
       return textWhite;
-    } else if (validationNumber(widget.number)) {
+    } else if (validationNumber(number)) {
       return textWhite;
-    } else if (validationOperatorFeatures(widget.number)) {
+    } else if (validationOperatorFeatures(number)) {
       return textGrey;
     } else {
       return textBlue;
@@ -68,7 +59,7 @@ class _CalcButtonState extends State<CalcButton> {
   TextStyle textGrey = TextStyle(color: grey, fontSize: 38);
 
   bool validationNumber(String value) {
-    String pattern = r'^(?=.*?[0-9,%])';
+    String pattern = r'^(?=.*?[0-9.%])';
     RegExp regExp = new RegExp(pattern);
     return regExp.hasMatch(value);
   }
@@ -84,4 +75,6 @@ class _CalcButtonState extends State<CalcButton> {
     RegExp regExp = new RegExp(pattern);
     return regExp.hasMatch(value);
   }
+
+  String get numberStep => _numberStep;
 }
